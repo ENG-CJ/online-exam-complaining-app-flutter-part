@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:online_exam_conmplaining_app/const/colors.dart';
+import 'package:online_exam_conmplaining_app/pages/active_complaints.dart';
+import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
 import 'package:online_exam_conmplaining_app/pages/login.dart';
+import 'package:online_exam_conmplaining_app/pages/register_complaint.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: colors['primary'],systemNavigationBarColor: colors['primary']));
   runApp(const MyApp());
 }
 
@@ -12,8 +18,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-      home: const Login(),
+debugShowCheckedModeBanner: false,
+      home: const ActiveComplaints(),
     );
   }
 }
