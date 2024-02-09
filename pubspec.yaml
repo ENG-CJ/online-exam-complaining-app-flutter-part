@@ -53,6 +53,8 @@ dependencies:
   easy_loading_button: ^0.3.2
   modal_progress_hud_nsn: ^0.4.0
   google_fonts: ^6.1.0
+  gap: ^3.0.1
+  provider: ^6.1.1
 
 dev_dependencies:
   flutter_test:
