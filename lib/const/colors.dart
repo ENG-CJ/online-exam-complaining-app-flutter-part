@@ -1,7 +1,5 @@
 
-
 import 'dart:ui';
-
 const colors=<String,Color>{
   "primary" : Color(0xff3652AD),
   "secondary": Color(0xff280274),
