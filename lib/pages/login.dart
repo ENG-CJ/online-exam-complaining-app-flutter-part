@@ -1,7 +1,9 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_exam_conmplaining_app/const/colors.dart';
+import 'package:online_exam_conmplaining_app/pages/active_complaints.dart';
 import 'package:online_exam_conmplaining_app/providers/loginProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -66,8 +68,7 @@ class _LoginState extends State<Login> {
                           style: GoogleFonts.poppins(
                               fontSize: 15,
                               letterSpacing: 1.5,
-                              color: Colors.black
-                          ),
+                              color: Colors.black),
                         ),
                       ],
                     ),
@@ -155,11 +156,23 @@ class _LoginState extends State<Login> {
                         ),
                         Gap(50),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             _formkey.currentState!.save();
                             if (_formkey.currentState!.validate()) {
                               Provider.of<Loginprovider>(context, listen: false)
-                                  .login(username!, password!);
+                                  .login(username!, password!)
+                                  .then((value) {
+                                if (value == null) {
+                                  CoolAlert.show(
+                                      context: context,
+                                      type: CoolAlertType.error,
+                                      title: "Auth Error",
+                                      text:
+                                          "Username Or Password is Incorrect");
+                                  return;
+                                }
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>ActiveComplaints()));
+                              });
                             }
                           },
                           child: Container(

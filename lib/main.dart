@@ -5,6 +5,8 @@ import 'package:online_exam_conmplaining_app/pages/active_complaints.dart';
 import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
 import 'package:online_exam_conmplaining_app/pages/login.dart';
 import 'package:online_exam_conmplaining_app/pages/register_complaint.dart';
+import 'package:online_exam_conmplaining_app/providers/loginProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -19,9 +21,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const ActiveComplaints(),
+    return ChangeNotifierProvider(
+      create: (_)=> Loginprovider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Login(),
+      ),
     );
   }
 }

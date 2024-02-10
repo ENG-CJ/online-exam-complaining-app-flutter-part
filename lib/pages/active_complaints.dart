@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:online_exam_conmplaining_app/const/colors.dart';
 import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
+import 'package:online_exam_conmplaining_app/pages/login.dart';
 import 'package:online_exam_conmplaining_app/utils/button.dart';
 import 'package:online_exam_conmplaining_app/utils/helpers/text_helper.dart';
 import 'package:online_exam_conmplaining_app/utils/text.dart';
@@ -32,7 +33,7 @@ class ActiveComplaints extends StatelessWidget {
                        CText(text: "Student")
                      ],
                    )],),
-                  FaIcon(FontAwesomeIcons.angleRight)
+                  InkWell(onTap: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>Login())),child: FaIcon(FontAwesomeIcons.angleRight))
 
                 ],
               ),
