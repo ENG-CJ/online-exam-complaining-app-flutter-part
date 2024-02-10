@@ -6,6 +6,7 @@ import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
 import 'package:online_exam_conmplaining_app/pages/login.dart';
 import 'package:online_exam_conmplaining_app/pages/register_complaint.dart';
 import 'package:online_exam_conmplaining_app/providers/loginProvider.dart';
+import 'package:online_exam_conmplaining_app/providers/terms_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -21,8 +22,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_)=> Loginprovider(),
+    return MultiProvider(
+     providers: [
+       ChangeNotifierProvider(create: (_)=>Loginprovider()),
+       ChangeNotifierProvider(create: (_)=>TermsProvider()),
+     ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Login(),

@@ -1,15 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_exam_conmplaining_app/const/colors.dart';
+import 'package:online_exam_conmplaining_app/models/terms.dart';
 import 'package:online_exam_conmplaining_app/pages/register_complaint.dart';
 import 'package:online_exam_conmplaining_app/utils/button.dart';
 import 'package:online_exam_conmplaining_app/utils/helpers/text_helper.dart';
 import 'package:online_exam_conmplaining_app/utils/terms.dart';
 import 'package:online_exam_conmplaining_app/utils/text.dart';
+import 'package:intl/intl.dart';
 
-class ComplainPage extends StatelessWidget {
-  const ComplainPage({super.key});
+class ComplainPage extends StatefulWidget {
+  final Terms? terms;
+  const ComplainPage({super.key,this.terms});
 
+  @override
+  State<ComplainPage> createState() => _ComplainPageState();
+}
+
+class _ComplainPageState extends State<ComplainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,18 +98,49 @@ class ComplainPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TermsDescriptions(
              term: "Start Date",
-               description: "12/2/2023",
+               description: DateFormat("yyyy-MM-dd").format(widget.terms!.startDate),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TermsDescriptions(
+              term: "End Date",
+              description: DateFormat("yyyy-MM-dd").format(widget.terms!.expireDate),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TermsDescriptions(
+              term: "Subject Length",
+              description: "${widget.terms!.subjectLength.toString()} Subject Minimum",
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TermsDescriptions(
+              term: "Status",
+              description: "${widget.terms!.status.toString()=="yes"? "Activated": "Not Active"}",
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TermsDescriptions(
+              term: "Exam Type",
+              description: widget.terms!.examType.toString(),
             ),
           ),
 
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CText(text: "More About!"),
+            child: CText(text: "More About!",textHelper: CTextHelper(
+              fontsize: 18,
+              family: "Poppins SemiBold"
+            ),),
           ),
 
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CText(text: "This is about descrion shjksa sakjska Based on the given terms, your complaint must be taken into consideration."),
+            child: CText(text: widget.terms!.description),
           ),
           SizedBox(height: 12,),
           Padding(

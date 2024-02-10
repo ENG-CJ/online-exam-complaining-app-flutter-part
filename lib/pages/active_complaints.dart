@@ -1,15 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:online_exam_conmplaining_app/const/colors.dart';
+import 'package:intl/intl.dart';
+import 'package:online_exam_conmplaining_app/local/local_storage.dart';
+import 'package:online_exam_conmplaining_app/models/terms.dart';
 import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
 import 'package:online_exam_conmplaining_app/pages/login.dart';
+import 'package:online_exam_conmplaining_app/providers/terms_provider.dart';
 import 'package:online_exam_conmplaining_app/utils/button.dart';
 import 'package:online_exam_conmplaining_app/utils/helpers/text_helper.dart';
 import 'package:online_exam_conmplaining_app/utils/text.dart';
+import 'package:provider/provider.dart';
 
-class ActiveComplaints extends StatelessWidget {
+class ActiveComplaints extends StatefulWidget {
   const ActiveComplaints({super.key});
 
+  @override
+  State<ActiveComplaints> createState() => _ActiveComplaintsState();
+}
+
+class _ActiveComplaintsState extends State<ActiveComplaints> {
+  var activeUser ='';
+   var image='';
+   Terms? terms;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<TermsProvider>(context,listen: false).fetchActiveComplainTerms().then((value){
+      setState(() {
+        terms=value;
+      });
+    });
+    LocalStorage().getLocalDataValue("username").then((value) {
+
+      setState(() {
+        activeUser=value;
+      });
+    });
+    LocalStorage().getLocalDataValue("image").then((value) {
+      setState(() {
+        image=value;
+      });
+
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,12 +60,14 @@ class ActiveComplaints extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 Row(children: [ SizedBox(width: 45,height: 45,child: Image.asset("assets/logo.png")),
+                 Row(children: [ SizedBox(width: 45,height: 45,child:
+                 image=="" ?
+                 Image.asset("assets/logo.png") : Image.network("http://192.168.1.4/Just Exam Complience/uploads/$image")),
                    SizedBox(width: 10,),
                    Column(
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
-                       CText(text: "Abdulrahman",textHelper: CTextHelper(fontsize: 19,fontWeight: FontWeight.bold,family: "Poppins Bold"),),
+                       CText(text: activeUser,textHelper: CTextHelper(fontsize: 19,fontWeight: FontWeight.bold,family: "Poppins Bold"),),
                        CText(text: "Student")
                      ],
                    )],),
@@ -65,15 +103,15 @@ class ActiveComplaints extends StatelessWidget {
                     CText(text: "Active Complaints",textHelper: CTextHelper(fontsize: 17,family: "Poppins Bold"),),
                     CText(text: "Here is Active Exam Complaints",textHelper: CTextHelper(fontsize: 10,family: "Poppins Light")),
                     SizedBox(height: 10,),
-                    Chip(label: CText(text: "Cabashada MidTerm-ka  ")),
-                    Chip(label: CText(text: "InActive Date: 12/2/2023")),
+                    Chip(label: CText(text: "Cabashada  Imtixaanka ${terms?.examType}-ka")),
+                    Chip(label: CText(text: "InActive Date: ${terms==null ? "Fetching..": DateFormat('yyyy-MM-dd').format(terms!.expireDate)}")),
                     SizedBox(height: 10,),
                     CButton(
-                      onClick: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=>ComplainPage())),
+                      onClick: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=>ComplainPage(terms: terms,))),
                         width: 180,
                         widget: Center(child: CText(text: "More",textHelper: CTextHelper(fontsize: 17,family: "Poppins Bold",color: Colors.white)),))
 
-                  
+
                   ],
                 ),
               ),
