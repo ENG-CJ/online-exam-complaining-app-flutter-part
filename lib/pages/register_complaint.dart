@@ -192,7 +192,7 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
                               type: CoolAlertType.info,
                               text: "subject length must be less than 4",
                             );
-                        }{
+                        }else{
                             var joinSubjects = splitSubjects.join(',');
                             print("join subjects $joinSubjects");
                             print("sending data $joinSubjects! , $description! , $std_id! , $status");
