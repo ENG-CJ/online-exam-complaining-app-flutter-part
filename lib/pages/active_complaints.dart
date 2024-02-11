@@ -55,27 +55,16 @@ class _ActiveComplaintsState extends State<ActiveComplaints> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 10,top: 15,right: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                 Row(children: [ SizedBox(width: 45,height: 45,child:
-                 image=="" ?
-                 Image.asset("assets/logo.png") : InkWell(
-                     onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>Profile())),
-                     child: Image.network("http://192.168.1.4/Just Exam Complience/uploads/$image"))),
-                   SizedBox(width: 10,),
-                   Column(
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [
-                       CText(text: activeUser,textHelper: CTextHelper(fontsize: 19,fontWeight: FontWeight.bold,family: "Poppins Bold"),),
-                       CText(text: "Student")
-                     ],
-                   )],),
-                  InkWell(onTap: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>Login())),child: FaIcon(FontAwesomeIcons.angleRight))
 
-                ],
+              padding: const EdgeInsets.only(left: 10,top: 5,right: 10),
+              child: ListTile(
+                leading: image=="" ? 
+                ClipRRect(borderRadius: BorderRadius.circular(20),child: CircleAvatar(radius: 20,child: Image.asset("assets/logo.png", fit: BoxFit.cover,))) :
+                ClipRRect(borderRadius: BorderRadius.circular(20),child: CircleAvatar(radius: 20,child: Image.network("http://192.168.1.4/Just Exam Complience/uploads/$image", fit: BoxFit.cover,))),
+                title: CText(text: activeUser,textHelper: CTextHelper(fontsize: 15,fontWeight: FontWeight.bold,family: "Poppins Bold"),),
+                subtitle: CText(text: "Student"),
+                trailing: InkWell(onTap: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>Login())),child: FaIcon(FontAwesomeIcons.angleRight)),
+
               ),
             ),
             SizedBox(height: 20,),
@@ -83,24 +72,24 @@ class _ActiveComplaintsState extends State<ActiveComplaints> {
               child: Container(
                 padding: EdgeInsets.all(20),
                 width: double.maxFinite,
-                decoration: BoxDecoration(
-                  boxShadow: [
-
-                    BoxShadow(
-                      color: Color(0xFFbec1e5).withOpacity(1),
-                      offset: Offset(4, -4),
-                      blurRadius: 29,
-                      spreadRadius: -8,
-                    ),
-
-                  ],
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(18),topRight: Radius.circular(18)),
-                  color: Colors.white
-                ),
+                // decoration: BoxDecoration(
+                //   boxShadow: [
+                //
+                //     BoxShadow(
+                //       color: Color(0xFFbec1e5).withOpacity(1),
+                //       offset: Offset(4, -4),
+                //       blurRadius: 29,
+                //       spreadRadius: -8,
+                //     ),
+                //
+                //   ],
+                //   borderRadius: BorderRadius.only(topLeft: Radius.circular(18),topRight: Radius.circular(18)),
+                //   color: Colors.white
+                // ),
                 child: Column(
                   children: [
                     SizedBox(height: 18,),
-                    Image.asset("assets/banner.png"),
+                    Container( width: 300 , height: 300, child: Image.asset("assets/banner.png"),),
                     SizedBox(height: 10,),
                     CText(text: "Active Complaints",textHelper: CTextHelper(fontsize: 17,family: "Poppins Bold"),),
                     CText(text: "Here is Active Exam Complaints",textHelper: CTextHelper(fontsize: 10,family: "Poppins Light")),
