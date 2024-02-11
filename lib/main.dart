@@ -5,6 +5,7 @@ import 'package:online_exam_conmplaining_app/pages/active_complaints.dart';
 import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
 import 'package:online_exam_conmplaining_app/pages/login.dart';
 import 'package:online_exam_conmplaining_app/pages/register_complaint.dart';
+import 'package:online_exam_conmplaining_app/providers/complain_provider.dart';
 import 'package:online_exam_conmplaining_app/providers/loginProvider.dart';
 import 'package:online_exam_conmplaining_app/providers/terms_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
      providers: [
        ChangeNotifierProvider(create: (_)=>Loginprovider()),
        ChangeNotifierProvider(create: (_)=>TermsProvider()),
+       ChangeNotifierProvider(create: (_) => Complains())
      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

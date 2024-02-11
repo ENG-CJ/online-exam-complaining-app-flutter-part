@@ -34,6 +34,7 @@ class _ComplainPageState extends State<ComplainPage> {
         ),
       ),
       body: Container(
+        color: Colors.white,
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(20),
