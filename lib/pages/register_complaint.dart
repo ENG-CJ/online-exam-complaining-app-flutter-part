@@ -4,9 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_exam_conmplaining_app/const/colors.dart';
 import 'package:online_exam_conmplaining_app/local/local_storage.dart';
+import 'package:online_exam_conmplaining_app/providers/complain_provider.dart';
 import 'package:online_exam_conmplaining_app/utils/button.dart';
 import 'package:online_exam_conmplaining_app/utils/helpers/text_helper.dart';
 import 'package:online_exam_conmplaining_app/utils/text.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/text_field.dart';
 
@@ -194,6 +196,7 @@ class _RegisterComplaintState extends State<RegisterComplaint> {
                             var joinSubjects = splitSubjects.join(',');
                             print("join subjects $joinSubjects");
                             print("sending data $joinSubjects! , $description! , $std_id! , $status");
+                            Provider.of<Complains>(context , listen: false).create_complain(joinSubjects, description!, std_id, status, context);
                         }
                       }
                     },
