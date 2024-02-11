@@ -5,6 +5,7 @@ import 'package:online_exam_conmplaining_app/local/local_storage.dart';
 import 'package:online_exam_conmplaining_app/models/terms.dart';
 import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
 import 'package:online_exam_conmplaining_app/pages/login.dart';
+import 'package:online_exam_conmplaining_app/pages/profile.dart';
 import 'package:online_exam_conmplaining_app/providers/terms_provider.dart';
 import 'package:online_exam_conmplaining_app/utils/button.dart';
 import 'package:online_exam_conmplaining_app/utils/helpers/text_helper.dart';
@@ -33,7 +34,6 @@ class _ActiveComplaintsState extends State<ActiveComplaints> {
       });
     });
     LocalStorage().getLocalDataValue("username").then((value) {
-
       setState(() {
         activeUser=value;
       });
@@ -62,7 +62,9 @@ class _ActiveComplaintsState extends State<ActiveComplaints> {
                 children: [
                  Row(children: [ SizedBox(width: 45,height: 45,child:
                  image=="" ?
-                 Image.asset("assets/logo.png") : Image.network("http://192.168.1.4/Just Exam Complience/uploads/$image")),
+                 Image.asset("assets/logo.png") : InkWell(
+                     onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>Profile())),
+                     child: Image.network("http://192.168.1.4/Just Exam Complience/uploads/$image"))),
                    SizedBox(width: 10,),
                    Column(
                      crossAxisAlignment: CrossAxisAlignment.start,
