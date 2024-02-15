@@ -7,555 +7,215 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:online_exam_conmplaining_app/models/my_complain.dart';
+import 'package:online_exam_conmplaining_app/models/students.dart';
+import 'package:online_exam_conmplaining_app/pages/login.dart';
+import 'package:online_exam_conmplaining_app/utils/button.dart';
+import 'package:online_exam_conmplaining_app/utils/helpers/text_helper.dart';
 import 'package:online_exam_conmplaining_app/utils/text.dart';
+import 'package:provider/provider.dart';
 
 import '../const/colors.dart';
+import '../providers/complain_provider.dart';
 
 class Profile extends StatefulWidget {
   final void Function()? onLoad;
-  const Profile({super.key, this.onLoad});
+  final Students? profileData;
+  const Profile({super.key, this.onLoad, this.profileData});
 
   @override
   State<Profile> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<Profile> {
-  var name = '';
-  var password = '';
-  bool hasError = false;
-  bool currentUserHasData = false;
+  MyComplain? latestComplain;
+  bool isLoading=true;
 
-  bool isLoading = true;
-  bool changingPassword = false;
-  bool hidden = true;
-  var error='';
-  var dio = Dio();
-  int id = 0;
-  // Future<void> fetchCurrentUser() async {
-  //   try {
-  //     Response response = await dio.get("$URL/customers/$id");
-  //
-  //     if (response.data['status']) {
-  //       if (response.data['data'].length > 0) {
-  //         currentUserHasData = true;
-  //         var data = response.data['data'][0];
-  //
-  //         user = User(
-  //             username: data['fullName'],
-  //             email: data['email'],
-  //             password: data['password'],
-  //             mobile: data['mobile'],
-  //             address: data['address'],
-  //             user_id: data['cust_id'],
-  //             account_status: data['account_status']);
-  //       } else
-  //         currentUserHasData = true;
-  //       hasError = false;
-  //     } else {
-  //       hasError = true;
-  //     }
-  //
-  //     isLoading = false;
-  //     setState(() {});
-  //   } catch (e) {
-  //     print(" error $e ");
-  //     isLoading = false;
-  //     setState(() {});
-  //   }
-  // }
-
-  // Future<void> updatePassword() async {
-  //   setState(() {
-  //     changingPassword=true;
-  //   });
-  //   try {
-  //     Response response = await dio.post("$URL/customers/updatePass",data: {"pass": password, "id": id});
-  //
-  //     if (response.data['status']) {
-  //       changingPassword=false;
-  //       hasError = false;
-  //     } else {
-  //       changingPassword=false;
-  //       hasError = true;
-  //       error=response.data['description'];
-  //     }
-  //
-  //     changingPassword=true;
-  //     setState(() {});
-  //   } catch (e) {
-  //     print(" error $e ");
-  //     hasError=true;
-  //     error=e.toString();
-  //     changingPassword=true;
-  //     setState(() {});
-  //   }
-  // }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // LocalStorage().getCurrentUser().then((value) {
-    //   print("value $value");
-    //   setState(() {
-    //     name = value.toString();
-    //   });
-    // });
-    // LocalStorage().getPassword().then((value) {
-    //   setState(() {
-    //     password = value.toString();
-    //   });
-    // });
-    // LocalStorage().getId().then((value) {
-    //   if (value != null) {
-    //     id = value;
-    //   }
-    // });
+    Provider.of<Complains>(context,listen: false).fetchSingleComplainWithStudent("C23001").then((value) {
+     setState(() {
+       latestComplain=value;
+       isLoading=false;
+     });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: colors['primary'],
+        leading: InkWell(
+            onTap: ()=> Navigator.pop(context),
+            child: Icon(Icons.arrow_back_ios,color: Colors.white)),
+        centerTitle: true,
+        title: CText(text: "My Profile",textHelper: CTextHelper(color: Colors.white),),
+      ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 50,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 30,
-                  ),
-                  InkWell(
-                      onTap: () {
-                        if (widget.onLoad != null) widget.onLoad!();
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.black,
-                      )),
-                  SizedBox(
-                    width: 100,
-                  ),
-                  CText(
-                    text: "Profile",
-                    // textStyle: TextStyle(
-                    //     color: Colors.black,
-                    //     fontSize: 28,
-                    //     fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    width: 110,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
+              SizedBox(height: 17,),
               Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 61.0,
-                    backgroundImage: AssetImage('asset/avatar.png'),
-                    backgroundColor: colors['primary']!.withOpacity(0.2),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 87, top: 83),
-                    child: Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              // 0xd8c8c8
-                              color:
-                              Color.fromARGB(0, 0, 0, 0).withOpacity(0.5),
-                              offset: Offset(-3, 7),
-                              blurRadius: 48,
-                              spreadRadius: -3,
-                            )
-                          ]),
-                      child: InkWell(
-                          onTap: () {
-                            // fetchCurrentUser().then((value) {
-                            //   Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //           builder: (_) => EdditPage(
-                            //             user: user!,
-                            //             onLoad: () {
-                            //               LocalStorage()
-                            //                   .getCurrentUser()
-                            //                   .then((value) {
-                            //                 setState(() {
-                            //                   if (value != null)
-                            //                     name = value;
-                            //                 });
-                            //               });
-                            //             },
-                            //           )));
-                            // });
-                          },
-                          child: Icon(Icons.edit)),
+                  Center(
+                    child: CircleAvatar(
+                      radius: 61.0,
+                      backgroundImage: AssetImage('assets/logo.png'),
+                      backgroundColor: colors['primary']!.withOpacity(0.2),
                     ),
-                  )
+                  ),
                 ],
               ),
               SizedBox(
                 height: 8,
               ),
-              CText(
-                  text: name.split(" ")[0],
-                 ),
-              SizedBox(
-                height: 13,
+              Center(
+                child: CText(
+                    text: widget.profileData!.name!,
+                  textHelper: CTextHelper(fontsize: 19),
+                   ),
               ),
-              // Container(
-              //   height: 400,
-              //
-              //   ///440
-              //   width: 349,
-              //   decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(34),
-              //       color: Colors.white,
-              //       boxShadow: [
-              //         BoxShadow(
-              //           color: Color(0xd8c8c8).withOpacity(1),
-              //           offset: Offset(1, 1),
-              //           blurRadius: 11,
-              //           spreadRadius: 1,
-              //         )
-              //       ]),
-              //
-              //   child: SingleChildScrollView(
-              //     scrollDirection: Axis.vertical,
-              //     child: Column(
-              //       children: [
-              //         Padding(
-              //           padding: const EdgeInsets.only(top: 2, right: 10),
-              //           child: InkWell(
-              //             onTap: (){
-              //               Navigator.push(context, MaterialPageRoute(builder: (_)=>YourOrders()));
-              //             },
-              //             child: CustomListTile(
-              //                 leading: FontAwesomeIcons.cartShopping,
-              //                 title: "Orders",
-              //                 trailing: Icons.arrow_forward_ios),
-              //           ),
-              //         ),
-              //         Divider(
-              //           thickness: 2,
-              //           height: 10,
-              //           indent: 15,
-              //           endIndent: 20,
-              //         ),
-              //         SizedBox(
-              //           height: 0,
-              //         ),
-              //         InkWell(
-              //           onTap: () {
-              //             LocalStorage().getPassword().then((value) {
-              //               setState(() {
-              //                 password=value.toString();
-              //               });
-              //             });
-              //             showDialog(
-              //                 context: context,
-              //                 builder: (_) => AlertDialog(
-              //                   content: Column(
-              //                     mainAxisSize: MainAxisSize.min,
-              //                     crossAxisAlignment:
-              //                     CrossAxisAlignment.start,
-              //                     children: [
-              //                       Text(
-              //                           "The confidentiality of your password is crucial; kindly ensure its secrecy and avoid sharing it."),
-              //                       SizedBox(
-              //                         height: 14,
-              //                       ),
-              //                       TextFormField(
-              //                         obscureText: true,
-              //                         onChanged: (value) {
-              //                           setState(() {
-              //                             password = value;
-              //                           });
-              //                         },
-              //                         initialValue: password,
-              //                         style: TextStyle(
-              //                             fontFamily: "Poppins Bold",
-              //                             color: colors['primary']),
-              //                         // readOnly: true,
-              //                         decoration: InputDecoration(
-              //                             helperText:
-              //                             "For Security Purpose, You Can't"
-              //                                 "\nView The Password!",
-              //                             enabledBorder: OutlineInputBorder(
-              //                                 borderRadius:
-              //                                 BorderRadius.circular(15),
-              //                                 borderSide: BorderSide(
-              //                                     color: colors['primary']
-              //                                     as Color)),
-              //                             focusedBorder: OutlineInputBorder(
-              //                                 borderRadius:
-              //                                 BorderRadius.circular(15),
-              //                                 borderSide: BorderSide(
-              //                                     color: colors['primary']
-              //                                     as Color))),
-              //                       ),
-              //                       SizedBox(
-              //                         height: 14,
-              //                       ),
-              //                       Padding(
-              //                         padding: const EdgeInsets.all(8.0),
-              //                         child: CButton(
-              //                           onClick: () {
-              //                             if (password == "") {
-              //                               showDialog(
-              //                                   context: context,
-              //                                   builder: (_) => AlertDialog(
-              //                                     title: Text("Error"),
-              //                                     content: Column(
-              //                                       mainAxisSize:
-              //                                       MainAxisSize
-              //                                           .min,
-              //                                       children: [
-              //                                         Text(
-              //                                           "You Can't Update Your Password with empty Data!",
-              //                                           style:
-              //                                           TextStyle(
-              //                                             color: Colors
-              //                                                 .redAccent,
-              //                                             fontFamily:
-              //                                             "Poppins Medium",
-              //                                           ),
-              //                                         ),
-              //                                         SizedBox(height: 16,),
-              //                                         CButton(
-              //                                             onClick: ()=>Navigator.pop(context),
-              //                                             widget:
-              //                                             Center(
-              //                                               child: Text(
-              //                                                 "Return",
-              //                                                 style:
-              //                                                 TextStyle(
-              //                                                   color: Colors.white,
-              //                                                   fontFamily:
-              //                                                   "Poppins Bold",
-              //                                                 ),
-              //                                               ),
-              //                                             ))
-              //                                       ],
-              //                                     ),
-              //                                   ));
-              //                               return;
-              //                             }
-              //                             if(!Validator().passLength(password)){
-              //                               showDialog(
-              //                                   context: context,
-              //                                   builder: (_) => AlertDialog(
-              //                                     title: Text("Error"),
-              //                                     content: Column(
-              //                                       mainAxisSize:
-              //                                       MainAxisSize
-              //                                           .min,
-              //                                       children: [
-              //                                         Text(
-              //                                           "Password Must Be greater than 4 Characters",
-              //                                           style:
-              //                                           TextStyle(
-              //                                             color: Colors
-              //                                                 .redAccent,
-              //                                             fontFamily:
-              //                                             "Poppins Medium",
-              //                                           ),
-              //                                         ),
-              //                                         SizedBox(height: 16,),
-              //                                         CButton(
-              //                                             onClick: ()=>Navigator.pop(context),
-              //                                             widget:
-              //                                             Center(
-              //                                               child: Text(
-              //                                                 "Return",
-              //                                                 style:
-              //                                                 TextStyle(
-              //                                                   color: Colors.white,
-              //                                                   fontFamily:
-              //                                                   "Poppins Bold",
-              //                                                 ),
-              //                                               ),
-              //                                             ))
-              //                                       ],
-              //                                     ),
-              //                                   ));
-              //                               return;
-              //                             }
-              //
-              //                             updatePassword().then((value) {
-              //                               if(hasError){
-              //                                 showDialog(
-              //                                     context: context,
-              //                                     builder: (_) => AlertDialog(
-              //                                       title: Text("Error"),
-              //                                       content: Column(
-              //                                         mainAxisSize:
-              //                                         MainAxisSize
-              //                                             .min,
-              //                                         children: [
-              //                                           Text(
-              //                                             error,
-              //                                             style:
-              //                                             TextStyle(
-              //                                               color: Colors
-              //                                                   .redAccent,
-              //                                               fontFamily:
-              //                                               "Poppins Medium",
-              //                                             ),
-              //                                           ),
-              //                                           SizedBox(height: 16,),
-              //                                           CButton(
-              //                                               onClick: ()=>Navigator.pop(context),
-              //                                               widget:
-              //                                               Center(
-              //                                                 child: Text(
-              //                                                   "Return",
-              //                                                   style:
-              //                                                   TextStyle(
-              //                                                     color: Colors.white,
-              //                                                     fontFamily:
-              //                                                     "Poppins Bold",
-              //                                                   ),
-              //                                                 ),
-              //                                               ))
-              //                                         ],
-              //                                       ),
-              //                                     ));
-              //                                 return;
-              //                               }
-              //                               Navigator.pop(context);
-              //                               showDialog(
-              //                                   context: context,
-              //                                   builder: (_) => AlertDialog(
-              //                                     title: Text("Privacy Updated"),
-              //                                     content: Column(
-              //                                       mainAxisSize:
-              //                                       MainAxisSize
-              //                                           .min,
-              //                                       children: [
-              //                                         Text(
-              //                                           "Your Security Code Has been updated!",
-              //                                           style:
-              //                                           TextStyle(
-              //                                             fontFamily:
-              //                                             "Poppins Medium",
-              //                                           ),
-              //                                         ),
-              //                                         SizedBox(height: 16,),
-              //                                         CButton(
-              //                                             onClick: ()=>Navigator.pop(context),
-              //                                             widget:
-              //                                             Center(
-              //                                               child: Text(
-              //                                                 "Return",
-              //                                                 style:
-              //                                                 TextStyle(
-              //                                                   color: Colors.white,
-              //                                                   fontFamily:
-              //                                                   "Poppins Bold",
-              //                                                 ),
-              //                                               ),
-              //                                             ))
-              //                                       ],
-              //                                     ),
-              //                                   ));
-              //                             }).then((value) {
-              //                               LocalStorage().updatePassKey(password);
-              //                             });
-              //                           },
-              //                           widget: Center(
-              //                               child: Row(
-              //                                 mainAxisAlignment:
-              //                                 MainAxisAlignment.center,
-              //                                 children: [
-              //                                   FaIcon(FontAwesomeIcons
-              //                                       .penToSquare),
-              //                                   SizedBox(
-              //                                     width: 10,
-              //                                   ),
-              //                                   Text(
-              //                                     "Change",
-              //                                     style: TextStyle(
-              //                                         fontSize: 17,
-              //                                         fontFamily:
-              //                                         "Poppins Bold"),
-              //                                   ),
-              //                                 ],
-              //                               )),
-              //                           width: double.maxFinite,
-              //                           radius: 16,
-              //                         ),
-              //                       )
-              //                     ],
-              //                   ),
-              //                 ));
-              //             // alert(context,
-              //             //     title: Text("Privacy"),
-              //             //     textOK: SizedBox.shrink(),
-              //             //     content: );
-              //           },
-              //           child: CustomListTile(
-              //               leading: Icons.password,
-              //               title: "Security",
-              //               trailing: Icons.arrow_forward_ios),
-              //         ),
-              //         Divider(
-              //           thickness: 2,
-              //           height: 10,
-              //           indent: 15,
-              //           endIndent: 20,
-              //         ),
-              //         InkWell(
-              //           onTap: () {
-              //             CoolAlert.show(
-              //                 context: context,
-              //                 type: CoolAlertType.confirm,
-              //                 title: "Confirm To Exit?",
-              //                 confirmBtnText: "Exit",
-              //                 cancelBtnText: "Return",
-              //                 onConfirmBtnTap: () {
-              //                   LocalStorage().clearLocalData().then((value) {
-              //                     Navigator.pushAndRemoveUntil(
-              //                         context,
-              //                         MaterialPageRoute(
-              //                             builder: (_) => LoginPage()),
-              //                             (route) => false);
-              //                   });
-              //                 });
-              //           },
-              //           child: CustomListTile(
-              //             leading: Icons.logout,
-              //             title: "Logout",
-              //           ),
-              //         ),
-              //         Divider(
-              //           thickness: 2,
-              //           height: 10,
-              //           indent: 15,
-              //           endIndent: 20,
-              //         ),
-              //         SizedBox(
-              //           height: 30,
-              //         ),
-              //         cText(text: "Hilaal@cook.com")
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              SizedBox(
+                height: 7,
+              ),
+              Center(
+                child: CText(
+                  text: widget.profileData!.id!,
+                  textHelper: CTextHelper(fontsize: 17),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      CText(text: "Class",textHelper: CTextHelper(family: "Poppins Bold",fontsize: 18),),
+                      CText(text: widget.profileData!.className!,textHelper: CTextHelper(family: "Poppins Light",fontsize: 13),),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      CText(text: "Semester",textHelper: CTextHelper(family: "Poppins Bold",fontsize: 18),),
+                      CText(text: widget.profileData!.semester!.split(" ")[1],textHelper: CTextHelper(family: "Poppins Light",fontsize: 13),),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      CText(text: "Status",textHelper: CTextHelper(family: "Poppins Bold",fontsize: 18),),
+                      CText(text: "Active",textHelper: CTextHelper(family: "Poppins Light",fontsize: 13),),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(height: 18,),
+              Center(
+                child: CButton(
+                  onClick: ()=> Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>Login()), (route) => false),
+                  color: colors['primary'],
+                  padding: 20,
+                    radius: 30,
+                    width: 380,
+                    widget: Center(child: CText(text: "Logout",textHelper: CTextHelper(color: Colors.white,family: "Poppins Bold"),),)),
+              ),
+              SizedBox(height: 23,),
+              Padding(
+                padding: const EdgeInsets.only(left: 20,top: 15),
+                child: CText(text: "Latest Complain Information",textHelper: CTextHelper(fontsize: 18,family: "Poppins Bold")),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: CText(text: "Here is Information about the latest complain you've already sent",textHelper: CTextHelper(fontsize: 14,family: "Poppins SemiBold")),
+              ),
+              Divider(indent: 10,),
+
+              //latest complain zone
+              isLoading ? Center(child: CircularProgressIndicator(),)
+              :
+             latestComplain!=null?
+             Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+
+               latestComplain==null? SizedBox.shrink():_displaySubjects(context,latestComplain!.subjects),
+               Padding(
+                 padding: const EdgeInsets.only(left: 10,top: 15),
+                 child: CText(text: "Status",textHelper: CTextHelper(fontsize: 21,family: "Poppins Bold")),
+               ),
+                 latestComplain==null? SizedBox.shrink(): Padding(
+                 padding: const EdgeInsets.only(left: 10,top: 8),
+                 child: Chip(
+                     elevation: 7,
+                     shadowColor: Colors.white,
+                     backgroundColor: Colors.white,
+                     label: Row(
+                       mainAxisSize: MainAxisSize.min,
+                       children: [
+                         SizedBox(
+                           width: 20,
+                           height: 20,
+                           child: Image.asset("assets/loading.png"),),
+                         SizedBox(width: 10,),
+                         CText(text: latestComplain!.status.toUpperCase(),textHelper: CTextHelper(fontsize: 17,family: "Poppins SemiBold")),
+                       ],
+                     )),
+               ),
+               Divider(indent: 10,),
+               Padding(
+                 padding: const EdgeInsets.only(left: 10,top: 15),
+                 child: CText(text: "Wixii Caqabad Ah Fadlan La Xariir Xafiiska Imtixanadka: 610990099 | 617667766",textHelper: CTextHelper(fontsize: 15,family: "Poppins Light")),
+               ),
+
+             ],)
+                  : _displayNoDataFoundError(context,"There is no active complaints for this student")
             ],
           ),
         ));
+  }
+
+  Widget _displaySubjects(BuildContext context, String subjects) {
+    var convertedSubjects=subjects.split(",");
+    if(convertedSubjects.length==0)
+        return SizedBox.shrink();
+
+    return  Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+          children:List.generate(convertedSubjects.length, (index) {
+            String subject = convertedSubjects[index];
+            return Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Chip(
+                elevation: 8,
+                label: CText(text: subject),
+              ),
+            );
+          }),
+
+
+      ),
+    );
+  }
+  
+  Widget _displayNoDataFoundError(BuildContext context,String message){
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset("assets/n.png",width: 160,height: 160,),
+          SizedBox(height: 10,),
+          CText(text: message,textHelper: CTextHelper(family: "Poppins SemiBold",fontsize: 17),)
+        ],
+      ),
+    );
   }
 }

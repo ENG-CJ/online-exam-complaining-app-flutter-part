@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:online_exam_conmplaining_app/local/local_storage.dart';
+import 'package:online_exam_conmplaining_app/models/students.dart';
 import 'package:online_exam_conmplaining_app/models/terms.dart';
 import 'package:online_exam_conmplaining_app/pages/comaplain.dart';
 import 'package:online_exam_conmplaining_app/pages/login.dart';
@@ -13,7 +14,8 @@ import 'package:online_exam_conmplaining_app/utils/text.dart';
 import 'package:provider/provider.dart';
 
 class ActiveComplaints extends StatefulWidget {
-  const ActiveComplaints({super.key});
+  final Students? studentData;
+  const ActiveComplaints({super.key, this.studentData});
 
   @override
   State<ActiveComplaints> createState() => _ActiveComplaintsState();
@@ -60,7 +62,9 @@ class _ActiveComplaintsState extends State<ActiveComplaints> {
               child: ListTile(
                 leading: image=="" ? 
                 ClipRRect(borderRadius: BorderRadius.circular(20),child: CircleAvatar(radius: 20,child: Image.asset("assets/logo.png", fit: BoxFit.cover,))) :
-                ClipRRect(borderRadius: BorderRadius.circular(20),child: CircleAvatar(radius: 20,child: Image.network("http://192.168.1.4/Just Exam Complience/uploads/$image", fit: BoxFit.cover,))),
+                InkWell(
+                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=>Profile(profileData: widget.studentData))),
+                    child: ClipRRect(borderRadius: BorderRadius.circular(20),child: CircleAvatar(radius: 20,child: Image.network("http://192.168.1.4/Just Exam Complience/uploads/$image", fit: BoxFit.cover,)))),
                 title: CText(text: activeUser,textHelper: CTextHelper(fontsize: 15,fontWeight: FontWeight.bold,family: "Poppins Bold"),),
                 subtitle: CText(text: "Student"),
                 trailing: InkWell(onTap: ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>Login())),child: FaIcon(FontAwesomeIcons.angleRight)),

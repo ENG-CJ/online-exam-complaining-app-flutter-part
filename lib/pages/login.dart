@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_exam_conmplaining_app/const/colors.dart';
 import 'package:online_exam_conmplaining_app/local/local_storage.dart';
+import 'package:online_exam_conmplaining_app/models/students.dart';
 import 'package:online_exam_conmplaining_app/pages/active_complaints.dart';
 import 'package:online_exam_conmplaining_app/providers/loginProvider.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ class _LoginState extends State<Login> {
   String? password;
 
   bool isHidden = true;
+  Students? students;
 
   @override
   Widget build(BuildContext context) {
@@ -172,15 +174,17 @@ class _LoginState extends State<Login> {
                                           "Username Or Password is Incorrect");
                                   return;
                                 }
+                                students=value;
                                 LocalStorage().createLocalData({
                                   "username": value.name,
                                   "id": value.id,
                                   "image": value.image
                                 }).then((value) {
+
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => ActiveComplaints()));
+                                          builder: (_) => ActiveComplaints(studentData: students)));
                                 });
                               });
                             }
